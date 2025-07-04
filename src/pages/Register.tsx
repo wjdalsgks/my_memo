@@ -13,13 +13,16 @@ const Register: React.FC = () => {
   const handleRegister = async () => {
     try {
       setError("");
-
-      // ✅ 비밀번호 확인
-      if (password !== repassword) {
-        setError("비밀번호가 일치하지 않습니다.");
+      if (!username?.trim() || !password?.trim() || !repassword?.trim()) {
+        setError(`입력란을 모두 입력하세요`);
+        alert(`입력란을 모두 입력하세요`);
         return;
       }
-
+      if (password?.trim() != repassword?.trim()) {
+        setError(`비밀번호가 서로 틀려요`);
+        alert(`비밀번호가 서로 틀려요`);
+        return;
+      }
       let response: any = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
         {
@@ -27,23 +30,18 @@ const Register: React.FC = () => {
           password,
         }
       );
-
       response = response?.data;
-
       if (!response?.success) {
         console.error("회원가입 실패:", response?.message ?? "");
         setError(`회원가입 실패. ${response?.message ?? ""}`);
         return;
       }
-
       console.log("로그인 성공:", response?.data);
-
       // 로그인 성공 시 처리
       useAuthStore.getState().setAuthData({
         userData: response?.data?.userData,
         userToken: response?.data?.userToken ?? "",
       });
-
       alert("회원가입 성공!!");
       navigate("/");
     } catch (error: any) {

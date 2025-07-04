@@ -1,10 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useValidateToken } from "../hooks/LoginValidate";
 
 const MemoEditor: React.FC = () => {
-  useValidateToken();
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState("");
